@@ -1,19 +1,27 @@
-import { model, Schema } from "mongoose";
-import {z} from "zod";
+import { model, Schema } from 'mongoose';
 
-export const UserZodSchema = z.object({
-   username: z.string().min(3).max(30),
-   email: z.string().email(),
-   password: z.string().min(6),
-})
+const userSchema = new Schema(
+   {
+      email: {
+         type: String,
+         required: true,
+         unique: true,
+         lowercase: true,
+         trim: true,
+      },
+      password: { type: String, required: true },
+      role: { type: String, enum: ['user', 'admin'], default: 'user' },
+      isEmailVerified: { type: Boolean, default: false },
+      name: {
+         type: String,
+      },
+      twoFactorEnabled: { type: Boolean, default: false },
+      twoFactorSecret: { type: String, default: null },
+      tokenVersion: { type: Number, default: 0 },
+      resetPasswordToken: { type: String, default: null },
+      resetPasswordExpires: { type: Date, default: null },
+   },
+   { timestamps: true }
+);
 
-
-const userSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-}, { timestamps: true });
-
-const User = model("User", userSchema);
-
-export default User;
+export const User = model('User', userSchema);

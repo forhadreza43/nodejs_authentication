@@ -1,9 +1,8 @@
-import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 const app = express();
-const PORT = process.env.PORT || 3000;
+import userRouter from './routes/user.route.js';
 
 // Middleware
 app.use(
@@ -13,15 +12,15 @@ app.use(
    })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
+
+app.use('/users', userRouter);
 
 // Sample route
 app.get('/', (req, res) => {
    res.send('Hello, World!');
 });
 
-// Start server
-app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);
-});
+export default app;
